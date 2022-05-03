@@ -39,13 +39,25 @@ resource "aws_s3_bucket" "default" {
 
     content {
       rule {
-        apply_server_side_encryption_by_default {
-          sse_algorithm = "AES256"
-        }
+       apply_server_side_encryption_by_default {
+         kms_master_key_id = aws_kms_key.default.arn
+         sse_algorithm     = "aws:kms"
+       }
       }
     }
   }
 
+}
+
+resource "aws_kms_key" "default" {
+  enable_key_rotation = true
+}
+
+resource "aws_s3_bucket_public_access_block" "default" {
+  bucket = aws_s3_bucket.default.id
+  block_public_acls = true
+  ignore_public_acls = true
+  restrict_public_buckets = true
 }
 
 resource "aws_iam_role" "default" {
@@ -296,6 +308,26 @@ resource "aws_codepipeline" "default" {
     }
   }
 
+  dynamic "stage" {
+    for_each = var.approval
+    content {
+      name = "Approval"
+
+      action {
+        name            = "Approval"
+        category        = "Approval"
+        owner           = "AWS"
+        provider        = "Manual"
+        version         = "1"
+
+        configuration = {
+          NotificationArn = "${var.approve_sns_arn}"
+          CustomData = "${var.approve_comment}"
+          ExternalEntityLink = "${var.approve_url}"
+        }
+      }
+    }
+  }
   dynamic "stage" {
     for_each = var.elastic_beanstalk_application_name != "" && var.elastic_beanstalk_environment_name != "" ? ["true"] : []
     content {
