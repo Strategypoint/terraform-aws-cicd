@@ -197,7 +197,7 @@ variable "approval" {
 }
 
 variable "approve_sns_arn" {
-  type = "string"
+  type = string
   default = ""
   description = "ARN for SNS notification for approval stage"
 }
