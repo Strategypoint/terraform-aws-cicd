@@ -39,25 +39,13 @@ resource "aws_s3_bucket" "default" {
 
     content {
       rule {
-       apply_server_side_encryption_by_default {
-         kms_master_key_id = aws_kms_key.default.arn
-         sse_algorithm     = "aws:kms"
-       }
+        apply_server_side_encryption_by_default {
+          sse_algorithm = "AES256"
+        }
       }
     }
   }
 
-}
-
-resource "aws_kms_key" "default" {
-  enable_key_rotation = true
-}
-
-resource "aws_s3_bucket_public_access_block" "default" {
-  bucket = aws_s3_bucket.default.id
-  block_public_acls = true
-  ignore_public_acls = true
-  restrict_public_buckets = true
 }
 
 resource "aws_iam_role" "default" {
