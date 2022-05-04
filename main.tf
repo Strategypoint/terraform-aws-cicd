@@ -315,7 +315,7 @@ resource "aws_codepipeline" "default" {
         version         = "1"
         configuration = {
           NotificationArn = module.sns_topic.sns_topic_arn
-          # CustomData = "${var.approve_comment}"
+          CustomData = "Automatic change"
         }
       }
     }
