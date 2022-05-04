@@ -195,3 +195,9 @@ variable "approval" {
   default = false
   description = "Include approval stage in CodePipeline"
 }
+
+variable "approve_sns_arn" {
+  type = "string"
+  default = ""
+  description = "ARN for SNS notification for approval stage"
+}

@@ -42,3 +42,8 @@ output "codepipeline_arn" {
   description = "CodePipeline ARN"
   value       = join("", aws_codepipeline.default.*.arn)
 }
+
+output "approval_sns_arn" {
+  description = "CodePipeline Approval SNS ARN"
+  value = module.sns_topic.sns_topic_arn
+}

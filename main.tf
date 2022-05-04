@@ -244,6 +244,12 @@ resource "aws_iam_role_policy_attachment" "codebuild_s3" {
 
 # 1. GitHub -> ECR (Docker image)
 
+module "sns_topic" {
+  source  = "terraform-aws-modules/sns/aws"
+  version = "~> 3.0"
+  name  = "codepipeline-approval-sns-topic"
+}
+
 resource "aws_codepipeline" "default" {
   # Elastic Beanstalk application name and environment name are specified
   count    = local.enabled ? 1 : 0
@@ -307,12 +313,10 @@ resource "aws_codepipeline" "default" {
         owner           = "AWS"
         provider        = "Manual"
         version         = "1"
-
-        # configuration = {
-        #   NotificationArn = "${var.approve_sns_arn}"
-        #   CustomData = "${var.approve_comment}"
-        #   ExternalEntityLink = "${var.approve_url}"
-        # }
+        configuration = {
+          NotificationArn = module.sns_topic.sns_topic_arn
+          # CustomData = "${var.approve_comment}"
+        }
       }
     }
   }
