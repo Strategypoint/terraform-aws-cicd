@@ -308,11 +308,11 @@ resource "aws_codepipeline" "default" {
         provider        = "Manual"
         version         = "1"
 
-        configuration = {
-          NotificationArn = "${var.approve_sns_arn}"
-          CustomData = "${var.approve_comment}"
-          ExternalEntityLink = "${var.approve_url}"
-        }
+        # configuration = {
+        #   NotificationArn = "${var.approve_sns_arn}"
+        #   CustomData = "${var.approve_comment}"
+        #   ExternalEntityLink = "${var.approve_url}"
+        # }
       }
     }
   }
