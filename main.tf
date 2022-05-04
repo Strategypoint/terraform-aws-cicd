@@ -309,7 +309,7 @@ resource "aws_codepipeline" "default" {
   }
 
   dynamic "stage" {
-    for_each = var.approval
+    for_each = var.approval == true ? [1] : []
     content {
       name = "Approval"
 
