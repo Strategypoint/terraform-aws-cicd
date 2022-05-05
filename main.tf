@@ -245,6 +245,7 @@ resource "aws_iam_role_policy_attachment" "codebuild_s3" {
 # 1. GitHub -> ECR (Docker image)
 
 module "sns_topic" {
+  count = var.approval == true ? 1 : 0
   source  = "terraform-aws-modules/sns/aws"
   version = "~> 3.0"
   name  = "codepipeline-approval-sns-topic"
